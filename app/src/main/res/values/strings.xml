@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">JustDoIt</string>
+    <string name="enter_title">Enter Title..</string>
+    <string name="enter_description">Enter Description..</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="icon_of_the_list_view">Icon of the list view</string>
+    <string name="date">DATE</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="create">Create</string>
+    <string name="about">About</string>
+</resources>
