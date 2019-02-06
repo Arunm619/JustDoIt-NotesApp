@@ -30,31 +30,10 @@ class ListActivity : AppCompatActivity() {
     var adapter: NotesAdapter? = null
     var lists: ArrayList<Note>? = null
 
-    private var dialogBuilder : AlertDialog.Builder? = null
-    private var alertDialog : AlertDialog? = null
+    private var dialogBuilder: AlertDialog.Builder? = null
+    private var alertDialog: AlertDialog? = null
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        // return super.onCreateOptionsMenu(menu)
-
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
-        if (item!!.itemId == R.id.create_new) {
-            //startActivity(Intent(this,MainActivity::class.java))
-            createPopUpMenu()
-        } else if (item!!.itemId == R.id.about) {
-            //go to about page..
-            Toast.makeText(this, "To be added!", Toast.LENGTH_SHORT).show()
-        }
-
-        return super.onOptionsItemSelected(item)
-
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,10 +64,13 @@ class ListActivity : AppCompatActivity() {
 
         adapter!!.notifyDataSetChanged()
 
+        fab_Add.setOnClickListener {
+            createPopUpMenu()
+        }
 
     }
 
-    fun createPopUpMenu(){
+    fun createPopUpMenu() {
 
         var view = layoutInflater.inflate(R.layout.popup, null)
         var title = view.et_title
@@ -120,7 +102,6 @@ class ListActivity : AppCompatActivity() {
             }
 
 
-
             val note = Note()
             note.title = title.text.toString()
             note.description = description.text.toString()
@@ -133,6 +114,30 @@ class ListActivity : AppCompatActivity() {
             finish()
 
         }
+
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // return super.onCreateOptionsMenu(menu)
+
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+//        if (item!!.itemId == R.id.create_new) {
+//            //startActivity(Intent(this,MainActivity::class.java))
+//            createPopUpMenu()
+//        } else
+        if (item!!.itemId == R.id.about) {
+            //go to about page..
+            Toast.makeText(this, "To be added!", Toast.LENGTH_SHORT).show()
+        }
+
+        return super.onOptionsItemSelected(item)
+
 
     }
 

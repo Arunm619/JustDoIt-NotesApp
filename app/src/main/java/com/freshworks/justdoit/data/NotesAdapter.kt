@@ -60,12 +60,13 @@ class NotesAdapter(
 
             val dateFormat: java.text.DateFormat = DateFormat.getDateInstance()
             val formattedDate = dateFormat.format(Date(note.created_at ?: 1L).time)
-            date.text = formattedDate.toString()
+            date.text = "created at : $formattedDate"
             //title.text = note.title
 
             deletebtn.setOnClickListener(this)
 
             edit.setOnClickListener(this)
+
 
         }
 
@@ -130,7 +131,7 @@ class NotesAdapter(
                     note.description = desc
 
 
-                    Log.d("DBHANDLER","Succes update , ${note.id.toString()} ")
+                    Log.d("DBHANDLER", "Succes update , ${note.id.toString()} ")
 
 
                     dbHandler.update(note)
