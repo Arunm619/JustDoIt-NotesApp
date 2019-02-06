@@ -2,33 +2,43 @@ package com.freshworks.justdoit.data
 
 import android.app.AlertDialog
 import android.content.Context
-import android.media.Image
+import android.graphics.Color
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.freshworks.justdoit.R
-import com.freshworks.justdoit.model.KEY_CREATED_AT
 import com.freshworks.justdoit.model.Note
+import com.github.ivbaranov.mli.MaterialLetterIcon
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_list.view.*
 import kotlinx.android.synthetic.main.listrow.view.*
 import kotlinx.android.synthetic.main.popup.view.*
+import java.security.PrivateKey
 import java.text.DateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class NotesAdapter(
     private val list: ArrayList<Note>,
-    private val context: Context
+    private val context: Context,
+    private val linearLayoutManager: LinearLayoutManager
+
 ) :
     RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+    lateinit var llm: LinearLayoutManager
+
+    init {
+        llm = linearLayoutManager
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val view = LayoutInflater.from(context).inflate(R.layout.listrow, parent, false)
+        val view = LayoutInflater.from(context).inflate(com.freshworks.justdoit.R.layout.listrow, parent, false)
         return ViewHolder(view, context, list)
     }
 
@@ -49,7 +59,7 @@ class NotesAdapter(
         var title = itemView.tv_title as TextView
         var description = itemView.tv_descripton as TextView
         var date = itemView.tv_date as TextView
-        var image = itemView.iv_logo as ImageView
+        var image = itemView.iv_logo as MaterialLetterIcon
         var deletebtn = itemView.btn_delete
         var edit = itemView.btn_update
 
@@ -63,6 +73,12 @@ class NotesAdapter(
             date.text = "created at : $formattedDate"
             //title.text = note.title
 
+            image.letter = note.title!![0].toString()
+            image.letterSize = 26
+            val rnd = Random()
+            val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+            image.shapeColor = color
+
             deletebtn.setOnClickListener(this)
 
             edit.setOnClickListener(this)
@@ -71,13 +87,48 @@ class NotesAdapter(
         }
 
         override fun onClick(v: View?) {
-            var position: Int = adapterPosition
-            var note: Note = mlist[position]
+            val position: Int = adapterPosition
+            val note: Note = mlist[position]
             when (v!!.id) {
                 deletebtn!!.id -> {
-                    deleteChore(note.id!!)
-                    mlist.removeAt(adapterPosition)
-                    notifyItemRemoved(adapterPosition)
+
+                    notifyItemRemoved(position)
+                    mlist.removeAt(position)
+
+                    var Delete = true
+                    var mySnack = Snackbar.make(itemView, "Deleted ${note.title}", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO") {
+                            mlist.add(position, note)
+
+                            notifyItemInserted(position)
+
+                            llm.scrollToPosition(position)
+
+                            Delete = false
+
+
+                        }
+
+                    mySnack.show()
+
+
+                    mySnack.addCallback(object : Snackbar.Callback() {
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+                            if (Delete) {
+                                //to be done after the user has let go the snack bar
+                                deleteChore(note.id!!)
+                                Toast.makeText(context, "Now only deletion happens", Toast.LENGTH_SHORT).show()
+
+                            }
+                        }
+
+                        override fun onShown(sb: Snackbar?) {
+                            super.onShown(sb)
+                        }
+                    });
+
+
                 }
 
                 edit!!.id -> {
@@ -87,21 +138,21 @@ class NotesAdapter(
         }
 
         fun deleteChore(id: Int) {
-            var db: NotesDataBaseHandler = NotesDataBaseHandler(mContext)
+            val db: NotesDataBaseHandler = NotesDataBaseHandler(mContext)
             db.deletnote(id)
         }
 
         fun editNote(note: Note) {
 
-            var dialogBuilder: AlertDialog.Builder?
-            var dialog: AlertDialog?
-            var dbHandler: NotesDataBaseHandler = NotesDataBaseHandler(mContext)
+            val dialogBuilder: AlertDialog.Builder?
+            val dialog: AlertDialog?
+            val dbHandler: NotesDataBaseHandler = NotesDataBaseHandler(mContext)
 
-            var view = LayoutInflater.from(context).inflate(R.layout.popup, null)
-            var title = view.et_title
-            var description = view.et_description
-            var savebtn = view.btn_save
-            var discard = view.btn_discard
+            val view = LayoutInflater.from(context).inflate(com.freshworks.justdoit.R.layout.popup, null)
+            val title = view.et_title
+            val description = view.et_description
+            val savebtn = view.btn_save
+            val discard = view.btn_discard
 
 
             title.setText(note.title)
@@ -137,6 +188,7 @@ class NotesAdapter(
                     dbHandler.update(note)
 
                     notifyItemChanged(adapterPosition, note)
+
 
 
                     dialog!!.dismiss()

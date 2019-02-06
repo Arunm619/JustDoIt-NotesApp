@@ -1,17 +1,18 @@
 package com.freshworks.justdoit.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.freshworks.justdoit.R
 import com.freshworks.justdoit.data.NotesDataBaseHandler
 import com.freshworks.justdoit.model.Note
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.activity_main.*
-import org.w3c.dom.Text
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
             Toast.makeText(this, "Saved Successfully", Toast.LENGTH_SHORT).show()
 
-            startActivity(Intent(this,ListActivity::class.java))
+            startActivity(Intent(this, ListActivity::class.java))
             finish()
 
         }
@@ -56,13 +57,13 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
     }
 
     private fun checkDB() {
 
-        if(dbHandler!!.getNotesCount()>0)
-        {
-            startActivity(Intent(this,ListActivity::class.java))
+        if (dbHandler!!.getNotesCount() > 0) {
+            startActivity(Intent(this, ListActivity::class.java))
             finish()
         }
 

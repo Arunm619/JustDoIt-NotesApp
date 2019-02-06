@@ -29,7 +29,7 @@
             <EditText
                     android:id="@+id/et_title"
                     android:textAppearance="?android:textAppearanceMedium"
-                    android:layout_margin="10dp"
+                    android:layout_margin="20dp"
                     android:padding="5dp"
 
 
@@ -51,20 +51,21 @@
             />
             <EditText
 
-                    android:lines="8"
+
                     android:minLines="6"
                     android:gravity="top|start"
+
                     android:maxLines="10"
                     android:id="@+id/et_description"
                     android:textAppearance="?android:textAppearanceMedium"
-                    android:layout_margin="10dp"
+                    android:layout_margin="20dp"
                     android:padding="5dp"
-
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:hint="@string/enter_description"
-                    android:inputType="text"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="2000"
             />
 
 

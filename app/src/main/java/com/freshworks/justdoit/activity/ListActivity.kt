@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.freshworks.justdoit.R
 import com.freshworks.justdoit.data.NotesAdapter
 import com.freshworks.justdoit.data.NotesDataBaseHandler
@@ -34,7 +35,6 @@ class ListActivity : AppCompatActivity() {
     private var alertDialog: AlertDialog? = null
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
@@ -42,7 +42,7 @@ class ListActivity : AppCompatActivity() {
         notesList = ArrayList()
         linearLayoutManager = LinearLayoutManager(this)
         dbHandler = NotesDataBaseHandler(this)
-        adapter = NotesAdapter(notesList!!, this)
+        adapter = NotesAdapter(notesList!!, this, linearLayoutManager!!)
 
 
         //setting up rv
@@ -51,6 +51,33 @@ class ListActivity : AppCompatActivity() {
         rv_list.layoutManager = linearLayoutManager
 
 
+        populateData()
+
+        fab_Add.setOnClickListener {
+            createPopUpMenu()
+        }
+
+
+        //val rv_list = findViewById(R.id.rv_list) as RecyclerView
+
+        rv_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0 && fab_Add.isShown)
+                    fab_Add.hide()
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fab_Add.show()
+                }
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
+
+    }
+
+    fun populateData() {
         lists = dbHandler!!.readNotes()
 
 
@@ -63,10 +90,6 @@ class ListActivity : AppCompatActivity() {
 
 
         adapter!!.notifyDataSetChanged()
-
-        fab_Add.setOnClickListener {
-            createPopUpMenu()
-        }
 
     }
 
@@ -108,10 +131,11 @@ class ListActivity : AppCompatActivity() {
 
 
             dbHandler!!.createNote(note)
+
+
+            populateData()
             alertDialog!!.dismiss()
 
-            startActivity(Intent(this, ListActivity::class.java))
-            finish()
 
         }
 
@@ -133,7 +157,20 @@ class ListActivity : AppCompatActivity() {
 //        } else
         if (item!!.itemId == R.id.about) {
             //go to about page..
-            Toast.makeText(this, "To be added!", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this, "To be added! and generating fake data", Toast.LENGTH_SHORT).show()
+
+            for (i in (1..100)) {
+                val note = Note()
+                note.title = i.toString()
+                note.description = "This article is about the number - $i"
+
+
+                dbHandler!!.createNote(note)
+
+            }
+
+            adapter?.notifyDataSetChanged()
         }
 
         return super.onOptionsItemSelected(item)

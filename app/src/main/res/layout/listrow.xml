@@ -21,12 +21,11 @@
                 android:weightSum="2"
                 android:layout_width="match_parent" android:layout_height="wrap_content">
 
-            <ImageView
+            <com.github.ivbaranov.mli.MaterialLetterIcon
 
                     android:layout_margin="10dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_launcher_background"
                     android:contentDescription="@string/icon_of_the_list_view"
 
                     android:id="@+id/iv_logo"
@@ -39,7 +38,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     tools:text="TITLE"
-                    android:layout_gravity="center_horizontal||center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:textStyle="bold"
                     android:textSize="20sp"
@@ -62,8 +61,10 @@
                   android:layout_below="@id/tv_descripton"
                   android:text="@string/date"
                   android:textStyle="bold"
+                  android:layout_margin="10dp"
+
                   android:id="@+id/tv_date"
-                  android:padding="4dp"
+                  android:padding="1dp"
                   android:layout_alignParentLeft="true"/>
 
 
@@ -75,10 +76,9 @@
 
             <Button
                     style="@style/Base.Widget.AppCompat.Button.Colored"
-
-
                     android:text="@string/delete"
                     android:layout_weight="1"
+
                     android:layout_width="0dp" android:layout_height="wrap_content"
                     android:id="@+id/btn_delete"
 
